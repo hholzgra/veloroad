@@ -467,7 +467,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(select way,place,coalesce(\"name:ru\", name) as name,(case when place='city' then 9 when place='town' then 8 when place='village' then 7 when place='hamlet' then 6 when place='suburb' then 5 when place='locality' then 4 when place in ('isolated_dwelling', 'allotments') then 3 else 0 end) as p_order, (case when coalesce(population, '')~E'^\\\\d+$' then population::int else 0 end) as pop from planet_osm_point where place in ('village', 'town', 'city', 'hamlet', 'suburb', 'locality', 'isolated_dwelling', 'island', 'allotments') order by p_order desc, pop desc) as places",
+        "table": "(select way,place,name,(case when place='city' then 9 when place='town' then 8 when place='village' then 7 when place='hamlet' then 6 when place='suburb' then 5 when place='locality' then 4 when place in ('isolated_dwelling', 'allotments') then 3 else 0 end) as p_order, (case when coalesce(population, '')~E'^\\\\d+$' then population::int else 0 end) as pop from planet_osm_point where place in ('village', 'town', 'city', 'hamlet', 'suburb', 'locality', 'isolated_dwelling', 'island', 'allotments') order by p_order desc, pop desc) as places",
         "key_field": "",
         "geometry_field": "way",
         "extent_cache": "auto",
@@ -494,7 +494,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(select way,railway,station,coalesce(\"name:ru\", name) as name,length(coalesce(\"name:ru\", name)) as len,(select 90+degrees(ST_Azimuth(ST_StartPoint(inter), ST_EndPoint(inter))) from (select ST_Intersection(r.way, ST_Buffer(p.way, 100)) as inter from planet_osm_line r where r.railway in ('rail', 'narrow_gauge') and r.way && ST_Buffer(p.way, 100) order by ST_Distance(r.way, p.way) limit 1) rr) as angle from planet_osm_point p where railway in ('station', 'halt') and (station is null or (station != 'subway' and station != 'disused'))) as stations",
+        "table": "(select way,railway,station,name,length(name) as len,(select 90+degrees(ST_Azimuth(ST_StartPoint(inter), ST_EndPoint(inter))) from (select ST_Intersection(r.way, ST_Buffer(p.way, 100)) as inter from planet_osm_line r where r.railway in ('rail', 'narrow_gauge') and r.way && ST_Buffer(p.way, 100) order by ST_Distance(r.way, p.way) limit 1) rr) as angle from planet_osm_point p where railway in ('station', 'halt') and (station is null or (station != 'subway' and station != 'disused'))) as stations",
         "key_field": "",
         "geometry_field": "way",
         "extent_cache": "auto",
